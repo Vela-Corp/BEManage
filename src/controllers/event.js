@@ -1,12 +1,21 @@
 import Event from "../models/event.js";
 
 export const getAllEvents = async (req, res) => {
+  const { sort, page, keyword } = req.query;
+  const searchOptions = {};
+  if (keyword) {
+    searchOptions.name = { $regex: keyword, $options: "i" };
+  }
   try {
-    const events = await Event.find();
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: 10,
+      sort: sort || "createdAt",
+    };
+    const events = await Event.paginate(searchOptions, options);
     if (events.length === 0) {
       return res.status(400).json({ message: "No events found" });
     }
-
     return res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });

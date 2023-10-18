@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-// Event: id, name, created_by, updated_by, created_at, updated_at
+import mongoosePaginate from "mongoose-paginate";
+
 const eventSchema = new Schema(
   {
     name: String,
@@ -12,5 +13,6 @@ const eventSchema = new Schema(
     versionKey: false,
   }
 );
+eventSchema.plugin(mongoosePaginate);
 const Event = mongoose.model("Event", eventSchema);
 export default Event;

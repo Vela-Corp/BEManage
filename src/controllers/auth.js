@@ -92,3 +92,28 @@ export const getOneUser = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllUsers = async (req, res) => {
+  const { sort, page, keyword } = req.query;
+  const searchOptions = {};
+  if (keyword) {
+    searchOptions.$or = [
+      { name: { $regex: keyword, $options: "i" } },
+      { email: { $regex: keyword, $options: "i" } },
+    ];
+  }
+  try {
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: 10,
+      sort: sort || "createdAt", // Sắp xếp theo 'name' mặc định (có thể sử dụng 'email' để sắp xếp theo email)
+    };
+    const users = await Auth.paginate(searchOptions, options);
+    if (users.length === 0) {
+      return res.status(400).json({ message: "No users found" });
+    }
+    return res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

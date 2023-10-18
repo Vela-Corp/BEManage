@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate";
 const schemaAuth = new Schema(
   {
     name: String,
@@ -16,5 +17,6 @@ const schemaAuth = new Schema(
     versionKey: false,
   }
 );
+schemaAuth.plugin(mongoosePaginate);
 const Auth = mongoose.model("Auth", schemaAuth);
 export default Auth;
