@@ -23,7 +23,7 @@ export const createCustomer = async (req, res) => {
 };
 
 export const getAllCustomers = async (req, res) => {
-  const { sort, page, keyword } = req.query;
+  const { sort, page, keyword, limit = 5 } = req.query;
   const searchOptions = {};
   if (keyword) {
     searchOptions.$or = [
@@ -44,8 +44,7 @@ export const getAllCustomers = async (req, res) => {
     } else {
       const options = {
         page: parseInt(page, 10) || 1,
-        // nếu không có giá trị limit thì mặc định sẽ lấy tất cả các document
-        limit: parseInt(10),
+        limit: limit || 5,
         sort: sort || "createdAt", // Sắp xếp theo 'name' mặc định (có thể sử dụng 'phone' để sắp xếp theo số điện thoại)
       };
       const customers = await Customer.paginate(searchOptions, options);
