@@ -1,7 +1,7 @@
 import Event from "../models/event.js";
 
 export const getAllEvents = async (req, res) => {
-  const { sort, page, keyword } = req.query;
+  const { sort, page, keyword, limit = 5 } = req.query;
   const searchOptions = {};
   if (keyword) {
     searchOptions.name = { $regex: keyword, $options: "i" };
@@ -9,7 +9,7 @@ export const getAllEvents = async (req, res) => {
   try {
     const options = {
       page: parseInt(page, 10) || 1,
-      limit: 10,
+      limit: limit || 5,
       sort: sort || "createdAt",
     };
     const events = await Event.paginate(searchOptions, options);
